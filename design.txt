@@ -1,0 +1,12 @@
+Threads: The simulation will use 2 types of threads: passenger threads and train threads. Each train and passenger will have its own thread. PassengerThread and TrainThread both extend the Thread class. 
+
+Locks: There will be 3 locks: passenger lock and train/station lock, and a synchronized lock for MBTA.
+    Passenger lock: This is used to dictate the board/deboard process of the passengers.
+        - At the beginning, the train will hold this lock. This makes it so the passengers cannot board or deboard the train when they are not supposed to
+        - When the train stops at a stop, it will release the passenger lock for 10 ms, which then one of the passengers at the station the train is at can acquire this lock and board the train.
+        - Afterwards, the train will acquire this lock again to prevent passengers from further boarding the train.
+    Train/station lock: this is used to dictate the movement of the train.
+        - while a train is ready to move to the next station, it acquires the train lock. This ensures that it is allowed to move, and that it will be to only train that can move to the next station.
+        - Check if the next station is open or not: if it is not open, then wait. If it is open, then go to the next station.
+    synchronized lock: This is just used to synchronize the shared data in the mbta across all of the threads.
+        - Goal is to prevent data races from multiple threads updating the data structures in the mbta class.
